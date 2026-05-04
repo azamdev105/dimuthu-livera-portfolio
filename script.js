@@ -105,6 +105,87 @@
     }
   });
 
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    const nameInput    = document.getElementById('contactName');
+    const emailInput   = document.getElementById('contactEmail');
+    const msgInput     = document.getElementById('contactMessage');
+    const nameError    = document.getElementById('nameError');
+    const emailError   = document.getElementById('emailError');
+    const msgError     = document.getElementById('messageError');
+    const formReset    = document.getElementById('formReset');
+    const emailRegex   = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function setError(input, errorEl, msg) {
+      input.setAttribute('aria-invalid', 'true');
+      errorEl.textContent = msg;
+    }
+
+    function clearError(input, errorEl) {
+      input.removeAttribute('aria-invalid');
+      errorEl.textContent = '';
+    }
+
+    [nameInput, emailInput, msgInput].forEach((input, i) => {
+      const errorEl = [nameError, emailError, msgError][i];
+      input.addEventListener('input', () => clearError(input, errorEl));
+    });
+
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let firstInvalid = null;
+
+      clearError(nameInput, nameError);
+      clearError(emailInput, emailError);
+      clearError(msgInput, msgError);
+
+      const name  = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const msg   = msgInput.value.trim();
+
+      if (!name) {
+        setError(nameInput, nameError, 'Please enter your name.');
+        firstInvalid = firstInvalid || nameInput;
+      } else if (name.length < 2) {
+        setError(nameInput, nameError, 'Name must be at least 2 characters.');
+        firstInvalid = firstInvalid || nameInput;
+      }
+
+      if (!email) {
+        setError(emailInput, emailError, 'Please enter your email.');
+        firstInvalid = firstInvalid || emailInput;
+      } else if (!emailRegex.test(email)) {
+        setError(emailInput, emailError, 'Please enter a valid email address.');
+        firstInvalid = firstInvalid || emailInput;
+      }
+
+      if (!msg) {
+        setError(msgInput, msgError, 'Please write a message.');
+        firstInvalid = firstInvalid || msgInput;
+      } else if (msg.length < 10) {
+        setError(msgInput, msgError, 'Message must be at least 10 characters.');
+        firstInvalid = firstInvalid || msgInput;
+      }
+
+      if (firstInvalid) {
+        firstInvalid.focus();
+        return;
+      }
+
+      contactForm.classList.add('submitted');
+    });
+
+    if (formReset) {
+      formReset.addEventListener('click', () => {
+        contactForm.reset();
+        clearError(nameInput, nameError);
+        clearError(emailInput, emailError);
+        clearError(msgInput, msgError);
+        contactForm.classList.remove('submitted');
+      });
+    }
+  }
+
   const revealObserver = new IntersectionObserver((entries, obs) => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
