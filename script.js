@@ -1,7 +1,6 @@
 (function () {
   'use strict';
 
-  // ── Theme toggle ────────────────────────────────────────────
   const themeToggle = document.getElementById('themeToggle');
 
   themeToggle.addEventListener('click', () => {
@@ -10,7 +9,6 @@
     localStorage.setItem('theme', next);
   });
 
-  // ── Scroll shadow ───────────────────────────────────────────
   const nav = document.getElementById('nav');
   let rafPending = false;
 
@@ -23,7 +21,6 @@
     });
   }, { passive: true });
 
-  // ── Sliding indicator ───────────────────────────────────────
   const indicator = document.getElementById('navIndicator');
   const navLinks = document.querySelectorAll('.nav-link');
 
@@ -33,19 +30,16 @@
     indicator.style.transform = 'translateX(' + linkEl.offsetLeft + 'px)';
   }
 
-  // Position under the initial active link once layout is ready
   setTimeout(() => {
     const active = document.querySelector('.nav-link.active');
     if (active) moveIndicator(active);
   }, 0);
 
-  // Recalculate on resize (offsetLeft changes)
   window.addEventListener('resize', () => {
     const active = document.querySelector('.nav-link.active');
     if (active) moveIndicator(active);
   }, { passive: true });
 
-  // ── Active section via IntersectionObserver ─────────────────
   function setActiveSection(id) {
     navLinks.forEach(link => {
       const isActive = link.dataset.section === id;
@@ -69,7 +63,6 @@
 
   document.querySelectorAll('section[id]').forEach(s => sectionObserver.observe(s));
 
-  // ── Mobile menu ─────────────────────────────────────────────
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
   let menuOpen = false;
@@ -77,7 +70,6 @@
   function openMenu() {
     menuOpen = true;
     mobileMenu.style.display = 'block';
-    // Force reflow so the browser sees the initial state before the transition
     void mobileMenu.offsetHeight;
     mobileMenu.classList.add('open');
     mobileMenu.setAttribute('aria-hidden', 'false');
@@ -112,4 +104,17 @@
       closeMenu();
     }
   });
+
+  const revealObserver = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      el.style.transitionDelay = (el.dataset.revealDelay || '0') + 'ms';
+      el.classList.add('visible');
+      obs.unobserve(el);
+    });
+  }, { threshold: 0, rootMargin: '0px 0px 200px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
 })();
