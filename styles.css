@@ -505,7 +505,11 @@ body {
 
 @media (max-width: 899px) {
   .hero {
-    padding-bottom: clamp(2.5rem, 6vh, 4rem);
+    padding-bottom: clamp(0.5rem, 2vh, 1rem);
+  }
+
+  .about {
+    padding-top: clamp(1.5rem, 3.5vh, 2.4rem);
   }
 }
 
@@ -528,7 +532,7 @@ body {
 .reveal {
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 800ms ease-out, transform 800ms ease-out;
+  transition: opacity 650ms ease-out, transform 650ms ease-out;
 }
 
 .reveal.visible {
