@@ -505,11 +505,12 @@ body {
 
 @media (max-width: 899px) {
   .hero {
+    min-height: auto;
     padding-bottom: clamp(0.5rem, 2vh, 1rem);
   }
 
   .about {
-    padding-top: clamp(1.5rem, 3.5vh, 2.4rem);
+    padding-top: clamp(0.75rem, 1.5vh, 1rem);
   }
 }
 
